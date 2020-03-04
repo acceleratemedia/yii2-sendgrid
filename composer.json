@@ -1,0 +1,27 @@
+{
+    "name": "brianvb/yii2-sendgrid",
+    "description": "Integrates SendGrid's PHP API into Yii2's mailer component",
+    "type": "yii2-extension",
+    "require": {
+        "sendgrid/smtpapi": "^0.6.3",
+        "yiisoft/yii2": "^2.0"
+    },
+    "authors": [
+        {
+            "name": "BrianVB",
+            "email": "vanburen.brian@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "bvb\\admin\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
