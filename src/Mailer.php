@@ -1,7 +1,9 @@
 <?php
 
-namespace bvb\sendgrid;
+namespace bvb\sendGrid;
 
+use SendGrid;
+use Yii;
 use yii\mail\BaseMailer;
 
 /**
@@ -11,9 +13,36 @@ use yii\mail\BaseMailer;
 class Mailer extends BaseMailer
 {
     /**
+     * Key needed to authenticate with SendGrid API
+     * @var string
+     */
+    public $apiKey;
+
+    /**
      * {@inheritdoc}
      */
     public $messageClass = Message::class;
+
+    /**
+     * SendGrid instance for working with their API
+     * @var \SendGrid
+     */
+    private $_sendGrid;
+
+    /**
+     * Return the SendGrid instance for working with their API
+     * @return \SendGrid
+     */
+    protected function getSendGrid()
+    {
+        if(empty($this->_sendGrid)){
+            if(empty($this->apiKey)){
+                throw new InvalidConfigException(__CLASS__.' requires the `apiKey` property to have a value.');
+            }
+            $this->_sendGrid = new SendGrid($this->apiKey);
+        }
+        return $this->_sendGrid;
+    }
 
     /**
      * {@inheritdoc}
@@ -27,6 +56,6 @@ class Mailer extends BaseMailer
         }
         Yii::info('Sending email "' . $message->getSubject() . '" to "' . $address . '"', __METHOD__);
 
-        return $this->getSwiftMailer()->send($message->getSwiftMessage()) > 0;
+        return $this->getSendGrid()->send($message->getSendGridMail());
     }
 }

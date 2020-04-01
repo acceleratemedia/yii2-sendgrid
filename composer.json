@@ -3,7 +3,7 @@
     "description": "Integrates SendGrid's PHP API into Yii2's mailer component",
     "type": "yii2-extension",
     "require": {
-        "sendgrid/smtpapi": "^0.6.3",
+        "sendgrid/sendgrid": "~7",
         "yiisoft/yii2": "^2.0"
     },
     "authors": [
@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "bvb\\sendgrid\\": "src"
+            "bvb\\sendGrid\\": "src"
         }
     },
     "repositories": [
