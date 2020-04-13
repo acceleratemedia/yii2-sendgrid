@@ -59,6 +59,9 @@ class Message extends BaseMessage
     {
         $functionCall = "get" . ucfirst($sourceType);
         $source = $this->getSendGridMail()->$functionCall();
+        if($source === null){
+            return $source;
+        }
         $name = $source->getName();
         $email = $source->getEmail();
 
