@@ -264,7 +264,6 @@ class Message extends BaseMessage
      */
     public function getSubject()
     {
-        \Yii::info(\yii\helpers\VarDumper::dumpAsString($this->getSendGridMail()->getGlobalSubject()));
         return $this->getSendGridMail()->getGlobalSubject()->getSubject();
     }
 
@@ -273,9 +272,7 @@ class Message extends BaseMessage
      */
     public function setSubject($subject)
     {
-        \Yii::info(\yii\helpers\VarDumper::dumpAsString($subject));
         $this->getSendGridMail()->setSubject($subject);
-        \Yii::info(\yii\helpers\VarDumper::dumpAsString($this->getSendGridMail()));
         return $this;
     }
 
