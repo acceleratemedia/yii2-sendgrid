@@ -1,5 +1,5 @@
 {
-    "name": "brianvb/yii2-sendgrid",
+    "name": "acceleratemedia/yii2-sendgrid",
     "description": "Integrates SendGrid's PHP API into Yii2's mailer component",
     "type": "yii2-extension",
     "require": {
