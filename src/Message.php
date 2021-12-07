@@ -2,7 +2,9 @@
 
 namespace bvb\sendGrid;
 
+use SendGrid\Mail\Attachment;
 use yii\base\NotSupportedException;
+use yii\base\InvalidParamException;
 use yii\mail\BaseMessage;
 
 /**
@@ -295,11 +297,36 @@ class Message extends BaseMessage
     }
 
     /**
+     * Attaches a file to a message using SendGrid\Mail\Attachment. SendGrid's
+     * class requires a base64 encoded string, so this will get the contents of
+     * $fileName, base64 encode it, and use that as the first argument to the
+     * constructor.
+     * $options parameter requires the `filename` key and uses the following config
+     * to pass these options into SendGrid\Mail\Attachment:
+     * ```php
+     * [
+     *     'type' => '',
+     *     'filename' => '', // required
+     *     'disposition' => '',
+     *     'content_id' => ''
+     * ]
+     * ```
+     * Which will be used as the respective arguments to the constructor of 
+     * SendGrid\Mail\Attachment
      * {@inheritdoc}
      */
     public function attach($fileName, array $options = [])
     {
-        throw new NotSupportedException('attach() has not been implemented');
+        $fileContents = file_get_contents($fileName);
+        $base64 = base64_encode($fileContents);
+        if(!isset($options['filename'])){
+            throw new InvalidParamException('Adding an attachment to a message requires the `filename` key and value added to the $options parameter');
+        }
+        $type = (isset($options['type']) ? $options['type'] : null);
+        $disposition = (isset($options['disposition']) ? $options['disposition'] : null);
+        $content_id = (isset($options['content_id']) ? $options['content_id'] : null);
+        $this->getSendGridMail()->addAttachment(new Attachment($base64, $type, $options['filename'], $disposition, $content_id));
+        return $this;
     }
 
     /**

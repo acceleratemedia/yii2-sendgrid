@@ -56,6 +56,30 @@ class Mailer extends BaseMailer
         }
         Yii::info('Sending email "' . $message->getSubject() . '" to "' . $address . '"', __METHOD__);
 
-        return $this->getSendGrid()->send($message->getSendGridMail());
+        try {
+            $response = $this->getSendGrid()->send($message->getSendGridMail());
+            // --- These response codes are ones I've seen successful and also from
+            // --- their documentation 
+            // https://docs.sendgrid.com/api-reference/how-to-use-the-sendgrid-v3-api/responses
+            if(in_array($response->statusCode(), [200,201,202])){
+                return true;
+            }
+            $responseBody = $response->body();
+            $responseData = json_decode($responseBody);
+            if (
+                json_last_error() === JSON_ERROR_NONE &&
+                isset($responseData->errors) &&
+                !empty($responseData->errors)
+            ){
+                $errorMessages = [];
+                foreach($responseData->errors as $error){
+                    $errorMessages[] = $error->message.': '.$error->field;
+                }
+                \Yii::error(implode("\n", $errorMessages), __METHOD__);
+            }
+        } catch (Exception $e) {
+            \Yii::error('Error sending mail: '.$e->getMessage(), __METHOD__);
+        }   
+        return false; 
     }
 }
